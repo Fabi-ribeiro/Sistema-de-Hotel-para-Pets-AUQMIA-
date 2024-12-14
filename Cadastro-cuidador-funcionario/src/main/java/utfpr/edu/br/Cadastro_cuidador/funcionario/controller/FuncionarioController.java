@@ -17,8 +17,8 @@ public class FuncionarioController {
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> listarTodos() {
-        List<Funcionario> funcionario =  funcionarioService.listarTodos();
-        return ResponseEntity.ok(funcionario);
+        List<Funcionario> funcionarios =  funcionarioService.listarTodos();
+        return ResponseEntity.ok(funcionarios);
     }
 
     @GetMapping("/{id}")
@@ -40,9 +40,13 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Funcionario> atualizar(@PathVariable Long id, @RequestBody Funcionario funcionario) {
-        Funcionario atualizado = funcionarioService.atualizar(id, funcionario);
-        return ResponseEntity.ok(atualizado);
+    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody Funcionario funcionarioAtualizado) {
+        try {
+            Funcionario funcionario = funcionarioService.atualizarFuncionario(id, funcionarioAtualizado);
+            return ResponseEntity.ok(funcionario); // Retorna o funcionário atualizado
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Retorna 404 caso não encontre
+        }
     }
 
     @DeleteMapping("/{id}")

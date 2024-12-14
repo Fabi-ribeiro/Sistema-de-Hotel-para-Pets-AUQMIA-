@@ -32,13 +32,17 @@ public class FuncionarioService {
         funcionarioRepository.deleteById(id);
     }
 
-    public Funcionario atualizar(Long id, Funcionario funcionarioAtualizado) {
-        Funcionario funcionario = funcionarioRepository.findById(id)
+    public Funcionario atualizarFuncionario(Long id, Funcionario funcionarioAtualizado) {
+        Funcionario funcionarioExistente = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-        funcionario.setNome(funcionarioAtualizado.getNome());
-        funcionario.setAgenda(funcionarioAtualizado.getAgenda());
-        funcionario.setFuncao(funcionarioAtualizado.getFuncao());
-        funcionario.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
-        return funcionarioRepository.save(funcionario);
+
+        // Atualizando os campos
+        funcionarioExistente.setNome(funcionarioAtualizado.getNome());
+        funcionarioExistente.setAgenda(funcionarioAtualizado.getAgenda());
+        funcionarioExistente.setFuncao(funcionarioAtualizado.getFuncao());
+        funcionarioExistente.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
+
+        // Salvando no banco de dados
+        return funcionarioRepository.save(funcionarioExistente);
     }
 }
