@@ -14,10 +14,11 @@ public class FuncionarioService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
 
-    public List<Funcionario> listarFuncionarios() {
-        return funcionarioRepository.findAll();
+    public List<Funcionario> listarTodos() {
+        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        System.out.println("Funcionários encontrados: " + funcionarios);
+        return funcionarios;
     }
-
     public Funcionario buscarPorId(Long id) {
         return funcionarioRepository.findById(id)
           .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
@@ -29,5 +30,15 @@ public class FuncionarioService {
 
     public void deletarFuncionario(Long id) {
         funcionarioRepository.deleteById(id);
+    }
+
+    public Funcionario atualizar(Long id, Funcionario funcionarioAtualizado) {
+        Funcionario funcionario = funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        funcionario.setNome(funcionarioAtualizado.getNome());
+        funcionario.setAgenda(funcionarioAtualizado.getAgenda());
+        funcionario.setFuncao(funcionarioAtualizado.getFuncao());
+        funcionario.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
+        return funcionarioRepository.save(funcionario);
     }
 }

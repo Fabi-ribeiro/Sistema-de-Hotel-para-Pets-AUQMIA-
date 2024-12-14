@@ -8,7 +8,6 @@ import utfpr.edu.br.Cadastro_cuidador.funcionario.model.Funcionario;
 import utfpr.edu.br.Cadastro_cuidador.funcionario.service.FuncionarioService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/funcionarios")
@@ -17,13 +16,15 @@ public class FuncionarioController {
     private FuncionarioService funcionarioService;
 
     @GetMapping
-    public List<Funcionario> listarFuncionarios() {
-        return funcionarioService.listarFuncionarios();
+    public ResponseEntity<List<Funcionario>> listarTodos() {
+        List<Funcionario> funcionario =  funcionarioService.listarTodos();
+        return ResponseEntity.ok(funcionario);
     }
 
     @GetMapping("/{id}")
-    public Optional<Funcionario> buscarPorId(@PathVariable Long id) {
-        return funcionarioService.buscarPorId(id);
+    public ResponseEntity<Funcionario> buscarPorId(@PathVariable Long id) {
+        Funcionario funcionario = funcionarioService.buscarPorId(id);
+        return ResponseEntity.ok(funcionario);
     }
 
     @PostMapping
@@ -36,6 +37,12 @@ public class FuncionarioController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Funcionario> atualizar(@PathVariable Long id, @RequestBody Funcionario funcionario) {
+        Funcionario atualizado = funcionarioService.atualizar(id, funcionario);
+        return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")

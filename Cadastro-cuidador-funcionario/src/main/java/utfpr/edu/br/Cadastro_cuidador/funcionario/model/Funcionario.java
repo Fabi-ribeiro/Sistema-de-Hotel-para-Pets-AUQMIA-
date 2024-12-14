@@ -15,7 +15,9 @@ public class Funcionario {
     private String funcao;
     private String horariosDeTrabalho;
 
+    public Funcionario(){}
     // Getters e Setters
+
     public Long getId() {
         return id;
     }
