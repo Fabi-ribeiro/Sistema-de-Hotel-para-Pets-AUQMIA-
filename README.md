@@ -6,6 +6,8 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
 
 ## 📐 Arquitetura do Projeto
 
+![Diagrama da arquitetura](./arquitetura.jpeg)
+
 ### 🛠️ Microserviços
 
 1. **Cadastro de Pets**
