@@ -13,7 +13,7 @@ import java.util.List;
 public class PetController {
 
     @Autowired
-    private petRepository petRepository; // Certifique-se de usar a instância injetada
+    private petRepository petRepository;
 
     // Endpoint para criar um pet
     @PostMapping
