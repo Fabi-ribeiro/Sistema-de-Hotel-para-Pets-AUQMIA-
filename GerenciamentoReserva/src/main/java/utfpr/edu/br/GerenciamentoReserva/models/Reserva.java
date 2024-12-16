@@ -1,4 +1,4 @@
-package main.java.utfpr.edu.br.GerenciamentoReserva.models;
+package utfpr.edu.br.GerenciamentoReserva.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -20,16 +20,14 @@ public class Reserva {
     @Column(nullable = false)
     private boolean cancelada = false;
 
-    @ManyToOne
-    @JoinColumn(name = "pet_id", nullable = false)
-    private CadastroPet pet;
+    @Column(name = "pet_id", nullable = false)
+    private Long petId;
 
-    @ManyToOne
-    @JoinColumn(name = "cuidador_id", nullable = false)
-    private CadastroCuidador cuidador;
+    @Column(name = "cuidador_id", nullable = false)
+    private Long cuidadorId;
 
     @Column(nullable = false)
-    private String status; // Ex.: "CONFIRMADA", "PENDENTE", "CANCELADA"
+    private String status;
 
     public Long getId() {
         return id;
@@ -63,20 +61,20 @@ public class Reserva {
         this.cancelada = cancelada;
     }
 
-    public CadastroPet getPet() {
-        return pet;
+    public Long getPetId() {
+        return petId;
     }
 
-    public void setPet(CadastroPet pet) {
-        this.pet = pet;
+    public void setPetId(Long petId) {
+        this.petId = petId;
     }
 
-    public CadastroCuidador getCuidador() {
-        return cuidador;
+    public Long getCuidadorId() {
+        return cuidadorId;
     }
 
-    public void setCuidador(CadastroCuidador cuidador) {
-        this.cuidador = cuidador;
+    public void setCuidadorId(Long cuidadorId) {
+        this.cuidadorId = cuidadorId;
     }
 
     public String getStatus() {

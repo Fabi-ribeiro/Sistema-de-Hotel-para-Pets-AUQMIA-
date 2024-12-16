@@ -1,12 +1,13 @@
-package main.java.utfpr.edu.br.GerenciamentoReserva.controller;
+package utfpr.edu.br.GerenciamentoReserva.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import utfpr.edu.br.GerenciamentoReserva.dtos.FuncionarioDTO;
+import utfpr.edu.br.GerenciamentoReserva.dtos.PetDTO;
 import utfpr.edu.br.GerenciamentoReserva.models.Reserva;
-import utfpr.edu.br.GerenciamentoReserva.models.ReservaRepository;
-import utfpr.edu.br.Cadastro_cuidador.funcionario.repository.FuncionarioRepository;
-import utfpr.edu.br.Cadastro_Pet.repository.petRepository;
+import utfpr.edu.br.GerenciamentoReserva.Repository.ReservaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,10 +21,10 @@ public class ReservaController {
     private ReservaRepository reservaRepository;
 
     @Autowired
-    private FuncionarioRepository funcionarioRepository;
+    private RestTemplate restTemplate;
 
-    @Autowired
-    private petRepository petRepository;
+    private static final String FUNCIONARIO_SERVICE_URL = "http://localhost:8081/api/funcionarios";
+    private static final String PET_SERVICE_URL = "http://localhost:8082/pets";
 
     @PostMapping
     public ResponseEntity<?> criarReserva(@RequestBody Reserva reserva) {
@@ -32,95 +33,78 @@ public class ReservaController {
             return ResponseEntity.badRequest().body("Datas não estão disponíveis para reserva.");
         }
 
-        Optional<Long> cuidadorId = alocarCuidador(reserva.getDataInicio(), reserva.getDataFim());
-        if (!cuidadorId.isPresent()) {
-            return ResponseEntity.badRequest().body("Não há cuidadores disponíveis para a quantidade de pets.");
+        try {
+            ResponseEntity<PetDTO> petResponse = restTemplate.getForEntity(
+                PET_SERVICE_URL + "/" + reserva.getPetId(), 
+                PetDTO.class
+            );
+            if (!petResponse.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.badRequest().body("Pet não encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao verificar pet: " + e.getMessage());
         }
 
-        reserva.setCuidador(funcionarioRepository.findById(cuidadorId.get()).orElse(null));
+        try {
+            ResponseEntity<FuncionarioDTO> funcResponse = restTemplate.getForEntity(
+                FUNCIONARIO_SERVICE_URL + "/disponiveis", 
+                FuncionarioDTO.class
+            );
+            if (funcResponse.getStatusCode().is2xxSuccessful() && funcResponse.getBody() != null) {
+                reserva.setCuidadorId(funcResponse.getBody().getId());
+            } else {
+                return ResponseEntity.badRequest().body("Não há cuidadores disponíveis");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao alocar cuidador: " + e.getMessage());
+        }
 
+        reserva.setStatus("PENDENTE");
         Reserva novaReserva = reservaRepository.save(reserva);
         return ResponseEntity.ok(novaReserva);
     }
 
     @GetMapping
     public ResponseEntity<List<Reserva>> listarReservas() {
-        List<Reserva> reservas = reservaRepository.findAll();
-        return ResponseEntity.ok(reservas);
+        return ResponseEntity.ok(reservaRepository.findAll());
     }
 
-    @GetMapping("/disponibilidade")
-    public ResponseEntity<Boolean> verificarDisponibilidade(
-            @RequestParam LocalDateTime dataInicio,
-            @RequestParam LocalDateTime dataFim) {
-        List<Reserva> reservasConflitantes = reservaRepository
-                .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(dataFim, dataInicio);
-        return ResponseEntity.ok(reservasConflitantes.isEmpty());
+    @GetMapping("/{id}")
+    public ResponseEntity<Reserva> buscarReserva(@PathVariable Long id) {
+        return reservaRepository.findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarReserva(@PathVariable Long id, @RequestBody Reserva reservaAtualizada) {
-        Optional<Reserva> reservaExistente = reservaRepository.findById(id);
-
-        if (reservaExistente.isPresent()) {
-            Reserva reserva = reservaExistente.get();
-
-            boolean disponivel = verificarDisponibilidadeDatas(reservaAtualizada.getDataInicio(), reservaAtualizada.getDataFim());
-            if (!disponivel) {
-                return ResponseEntity.badRequest().body("Datas atualizadas não estão disponíveis para reserva.");
-            }
-
-            if (!reserva.getDataInicio().equals(reservaAtualizada.getDataInicio()) ||
-                !reserva.getDataFim().equals(reservaAtualizada.getDataFim())) {
-                Optional<Long> cuidadorId = alocarCuidador(reservaAtualizada.getDataInicio(), reservaAtualizada.getDataFim());
-                if (!cuidadorId.isPresent()) {
-                    return ResponseEntity.badRequest().body("Não há cuidadores disponíveis para a quantidade de pets.");
-                }
-                reserva.setCuidador(funcionarioRepository.findById(cuidadorId.get()).orElse(null));
-            }
-
-            reserva.setDataInicio(reservaAtualizada.getDataInicio());
-            reserva.setDataFim(reservaAtualizada.getDataFim());
-            reserva.setPet(reservaAtualizada.getPet());
-            reserva.setStatus(reservaAtualizada.getStatus());
-            reserva.setCancelada(reservaAtualizada.isCancelada());
-
-            Reserva reservaSalva = reservaRepository.save(reserva);
-            return ResponseEntity.ok(reservaSalva);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return reservaRepository.findById(id)
+            .map(reserva -> {
+                reserva.setDataInicio(reservaAtualizada.getDataInicio());
+                reserva.setDataFim(reservaAtualizada.getDataFim());
+                reserva.setPetId(reservaAtualizada.getPetId());
+                reserva.setCuidadorId(reservaAtualizada.getCuidadorId());
+                reserva.setStatus(reservaAtualizada.getStatus());
+                reserva.setCancelada(reservaAtualizada.isCancelada());
+                
+                return ResponseEntity.ok(reservaRepository.save(reserva));
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
-        if (reservaRepository.existsById(id)) {
-            reservaRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return reservaRepository.findById(id)
+            .map(reserva -> {
+                reservaRepository.delete(reserva);
+                return ResponseEntity.ok().<Void>build();
+            })
+            .orElse(ResponseEntity.notFound().build());
     }
 
     private boolean verificarDisponibilidadeDatas(LocalDateTime inicio, LocalDateTime fim) {
         List<Reserva> reservasConflitantes = reservaRepository
-                .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(fim, inicio);
+            .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(fim, inicio);
         return reservasConflitantes.isEmpty();
-    }
-
-    private Optional<Long> alocarCuidador(LocalDateTime inicio, LocalDateTime fim) {
-        List<Reserva> reservasConflitantes = reservaRepository
-                .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(fim, inicio);
-        int totalPets = reservasConflitantes.size();
-
-        int cuidadoresNecessarios = (int) Math.ceil(totalPets / 5.0);
-
-        List<Long> cuidadoresDisponiveis = funcionarioRepository.findAvailableCuidadores(inicio, fim);
-
-        if (cuidadoresDisponiveis.size() >= cuidadoresNecessarios) {
-            return Optional.of(cuidadoresDisponiveis.get(0));
-        } else {
-            return Optional.empty();
-        }
     }
 }
