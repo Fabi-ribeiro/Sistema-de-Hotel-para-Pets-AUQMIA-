@@ -14,9 +14,9 @@ public class Funcionario {
     private String agenda;
     private String funcao;
     private String horariosDeTrabalho;
+    private boolean disponivel; 
 
     public Funcionario(){}
-    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -58,4 +58,11 @@ public class Funcionario {
         this.horariosDeTrabalho = horariosDeTrabalho;
     }
 
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
 }

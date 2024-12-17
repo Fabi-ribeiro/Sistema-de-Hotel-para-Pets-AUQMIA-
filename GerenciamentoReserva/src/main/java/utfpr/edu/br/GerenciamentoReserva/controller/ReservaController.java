@@ -46,14 +46,20 @@ public class ReservaController {
         }
 
         try {
+            Long funcionarioId = reserva.getCuidadorId();
             ResponseEntity<FuncionarioDTO> funcResponse = restTemplate.getForEntity(
-                FUNCIONARIO_SERVICE_URL + "/disponiveis", 
+                FUNCIONARIO_SERVICE_URL + "/" + funcionarioId, 
                 FuncionarioDTO.class
             );
             if (funcResponse.getStatusCode().is2xxSuccessful() && funcResponse.getBody() != null) {
-                reserva.setCuidadorId(funcResponse.getBody().getId());
+                FuncionarioDTO funcionario = funcResponse.getBody();
+                if (funcionario.isDisponivel()) {
+                    reserva.setCuidadorId(funcionario.getId());
+                } else {
+                    return ResponseEntity.badRequest().body("Funcionário não está disponível");
+                }
             } else {
-                return ResponseEntity.badRequest().body("Não há cuidadores disponíveis");
+                return ResponseEntity.badRequest().body("Funcionário não encontrado");
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao alocar cuidador: " + e.getMessage());

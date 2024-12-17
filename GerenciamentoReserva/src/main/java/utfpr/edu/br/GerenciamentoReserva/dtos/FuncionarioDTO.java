@@ -6,15 +6,17 @@ public class FuncionarioDTO {
     private String agenda;
     private String funcao;
     private String horariosDeTrabalho;
+    private boolean disponivel;
 
     public FuncionarioDTO() {}
 
-    public FuncionarioDTO(Long id, String nome, String agenda, String funcao, String horariosDeTrabalho) {
+    public FuncionarioDTO(Long id, String nome, String agenda, String funcao, String horariosDeTrabalho, boolean disponivel) {
         this.id = id;
         this.nome = nome;
         this.agenda = agenda;
         this.funcao = funcao;
         this.horariosDeTrabalho = horariosDeTrabalho;
+        this.disponivel = disponivel;
     }
 
     public Long getId() {
@@ -55,5 +57,13 @@ public class FuncionarioDTO {
 
     public void setHorariosDeTrabalho(String horariosDeTrabalho) {
         this.horariosDeTrabalho = horariosDeTrabalho;
+    }
+
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
     }
 }
