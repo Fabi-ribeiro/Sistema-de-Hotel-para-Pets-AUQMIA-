@@ -1,4 +1,4 @@
-package utfpr.edu.br.Cadastro_Pet;
+package utfpr.edu.br.CadastroPet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

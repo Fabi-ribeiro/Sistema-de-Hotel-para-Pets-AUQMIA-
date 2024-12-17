@@ -1,4 +1,4 @@
-package utfpr.edu.br.Cadastro_Pet.models;
+package utfpr.edu.br.CadastroPet.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

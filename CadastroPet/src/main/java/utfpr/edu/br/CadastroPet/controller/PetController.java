@@ -1,10 +1,10 @@
-package utfpr.edu.br.Cadastro_Pet.controller;
+package utfpr.edu.br.CadastroPet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utfpr.edu.br.Cadastro_Pet.models.Pet;
-import utfpr.edu.br.Cadastro_Pet.repository.petRepository;
+import utfpr.edu.br.CadastroPet.models.Pet;
+import utfpr.edu.br.CadastroPet.repository.petRepository;
 
 import java.util.List;
 

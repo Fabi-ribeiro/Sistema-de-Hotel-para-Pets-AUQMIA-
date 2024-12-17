@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'utfpr.edu.br.Cadastro-Pet' is invalid and this project uses 'utfpr.edu.br.Cadastro_Pet' instead.
+* The original package name 'utfpr.edu.br.Cadastro-Pet' is invalid and this project uses 'utfpr.edu.br.CadastroPet' instead.
 
 # Getting Started
 

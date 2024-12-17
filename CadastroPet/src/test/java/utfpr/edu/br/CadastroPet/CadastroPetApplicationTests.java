@@ -1,4 +1,4 @@
-package utfpr.edu.br.Cadastro_Pet;
+package utfpr.edu.br.CadastroPet;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
