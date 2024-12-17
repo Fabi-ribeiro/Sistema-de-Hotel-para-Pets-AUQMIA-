@@ -24,7 +24,7 @@ public class ReservaController {
     private RestTemplate restTemplate;
 
     private static final String FUNCIONARIO_SERVICE_URL = "http://localhost:8081/api/funcionarios";
-    private static final String PET_SERVICE_URL = "http://localhost:8082/pets";
+    private static final String PET_SERVICE_URL = "http://localhost:8080/pets";
 
     @PostMapping
     public ResponseEntity<?> criarReserva(@RequestBody Reserva reserva) {
