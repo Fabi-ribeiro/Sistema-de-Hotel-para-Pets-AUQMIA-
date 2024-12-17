@@ -11,7 +11,7 @@
 	<groupId>utfpr.edu.br</groupId>
 	<artifactId>CadastroCuidadorFuncionario</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Cadastro-cuidador-funcionario</name>
+	<name>CadastroCuidadorFuncionario</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
