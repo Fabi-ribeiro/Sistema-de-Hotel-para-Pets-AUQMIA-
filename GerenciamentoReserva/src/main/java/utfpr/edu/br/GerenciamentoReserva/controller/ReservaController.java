@@ -7,11 +7,10 @@ import org.springframework.web.client.RestTemplate;
 import utfpr.edu.br.GerenciamentoReserva.dtos.FuncionarioDTO;
 import utfpr.edu.br.GerenciamentoReserva.dtos.PetDTO;
 import utfpr.edu.br.GerenciamentoReserva.models.Reserva;
-import utfpr.edu.br.GerenciamentoReserva.Repository.ReservaRepository;
+import utfpr.edu.br.GerenciamentoReserva.repository.ReservaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservas")
@@ -53,7 +52,7 @@ public class ReservaController {
             );
             if (funcResponse.getStatusCode().is2xxSuccessful() && funcResponse.getBody() != null) {
                 FuncionarioDTO funcionario = funcResponse.getBody();
-                if (funcionario.isDisponivel()) {
+                if (funcionario != null && funcionario.isDisponivel()) {
                     reserva.setCuidadorId(funcionario.getId());
                 } else {
                     return ResponseEntity.badRequest().body("Funcionário não está disponível");

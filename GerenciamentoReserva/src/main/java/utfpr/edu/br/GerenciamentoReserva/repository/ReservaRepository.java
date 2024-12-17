@@ -1,4 +1,4 @@
-package utfpr.edu.br.GerenciamentoReserva.Repository;
+package utfpr.edu.br.GerenciamentoReserva.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
