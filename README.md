@@ -96,10 +96,10 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
    Verifique as propriedades de conexão no arquivo `application.properties` de cada microserviço para utilizar o H2.  
    Exemplo de configuração:
    ```properties
-   spring.datasource.url=jdbc:h2:mem:cadastro-pet
+   spring.datasource.url=jdbc:h2:mem:cadastropetdb
    spring.datasource.driverClassName=org.h2.Driver
-   spring.datasource.username=sa
-   spring.datasource.password=
+   spring.datasource.username=cadastro
+   spring.datasource.password=pet
    spring.h2.console.enabled=true
    ```
 
@@ -111,7 +111,8 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
 
 6. **Acesse os Endpoints**  
    Após os microserviços estarem em execução, utilize as seguintes URLs:  
-   - **Cadastro de Pets**: `http://localhost:8081/pets`
+   - **Cadastro de Pets**: `http://localhost:8080/pets`
+   - **Cadastro de Cuidadores/Funcionarios**: `http://localhost:8081/api/funcionarios`
    - **Gerenciamento de Reservas**: `http://localhost:8082/reservas`
 
 ---
