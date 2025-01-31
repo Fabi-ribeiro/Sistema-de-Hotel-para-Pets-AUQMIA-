@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CadastroPetApplication<CadastroPet>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "utfpr.edu.br.CadastroPet.CadastroPetApplication",
+            "projectName": "CadastroPet",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CadastroFuncionarioApplication<CadastroCuidadorFuncionario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "utfpr.edu.br.Cadastro_cuidador.funcionario.CadastroFuncionarioApplication",
+            "projectName": "CadastroCuidadorFuncionario",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GatewayApplication<gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.edu.utfpr.gateway.GatewayApplication",
+            "projectName": "gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GerenciamentoReservaApplication<GerenciamentoReserva>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "utfpr.edu.br.GerenciamentoReserva.GerenciamentoReservaApplication",
+            "projectName": "GerenciamentoReserva",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
