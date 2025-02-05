@@ -72,6 +72,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
 - **Framework**: Spring Boot
 - **Banco de Dados**: H2
 - **Autenticação**: JSON Web Tokens (JWT)
+- **Swagger**: Swagger para documentação da api
 
 ---
 
@@ -114,6 +115,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
    - **Cadastro de Pets**: `http://localhost:8080/pets`
    - **Cadastro de Cuidadores/Funcionarios**: `http://localhost:8081/api/funcionarios`
    - **Gerenciamento de Reservas**: `http://localhost:8082/reservas`
+   - **Api Gateway**: `http://localhost:8079/reservas`
 
 ---
 
