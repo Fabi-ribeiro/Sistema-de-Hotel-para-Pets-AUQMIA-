@@ -1,17 +1,31 @@
 package utfpr.edu.br.Cadastro_cuidador.funcionario.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import utfpr.edu.br.Cadastro_cuidador.funcionario.model.Funcionario;
 import utfpr.edu.br.Cadastro_cuidador.funcionario.service.FuncionarioService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/funcionarios")
 public class FuncionarioController {
+    private static final Logger logger = LoggerFactory.getLogger(FuncionarioController.class);
     @Autowired
     private FuncionarioService funcionarioService;
 
@@ -27,16 +41,25 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionario);
     }
 
-    @PostMapping
-    public ResponseEntity<Funcionario> salvarFuncionario(@RequestBody Funcionario funcionario) {
+     @PostMapping
+    public ResponseEntity<Funcionario> salvarFuncionario(@Valid @RequestBody Funcionario funcionario) {
         try {
             Funcionario savedFuncionario = funcionarioService.salvarFuncionario(funcionario);
             return new ResponseEntity<>(savedFuncionario, HttpStatus.CREATED);
         } catch (Exception e) {
             // Log da exceção para facilitar o diagnóstico
-            e.printStackTrace();
+            logger.error("Error saving Funcionario", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append(";");
+         });
+        return ResponseEntity.badRequest().body(errors.toString());
     }
 
     @PutMapping("/{id}")

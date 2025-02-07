@@ -1,6 +1,7 @@
 package utfpr.edu.br.GerenciamentoReserva.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,24 +12,29 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Data de início é obrigatória.")
     @Column(nullable = false)
     private LocalDateTime dataInicio;
 
+    @NotNull(message = "Data de fim é obrigatória.")
     @Column(nullable = false)
     private LocalDateTime dataFim;
 
     @Column(nullable = false)
     private boolean cancelada = false;
 
+    @NotNull(message = "O Código do Pet é obrigatório.")
     @Column(name = "pet_id", nullable = false)
     private Long petId;
 
+    @NotNull(message = "O Código do Cuidador é obrigatório.")
     @Column(name = "cuidador_id", nullable = false)
     private Long cuidadorId;
 
     @Column(nullable = false)
     private String status;
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -9,6 +9,9 @@ import utfpr.edu.br.GerenciamentoReserva.dtos.PetDTO;
 import utfpr.edu.br.GerenciamentoReserva.models.Reserva;
 import utfpr.edu.br.GerenciamentoReserva.repository.ReservaRepository;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import javax.validation.Valid;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class ReservaController {
     private static final String PET_SERVICE_URL = "http://localhost:8080/pets";
 
     @PostMapping
-    public ResponseEntity<?> criarReserva(@RequestBody Reserva reserva) {
+    public ResponseEntity<?> criarReserva(@Valid @RequestBody Reserva reserva) {
         boolean disponivel = verificarDisponibilidadeDatas(reserva.getDataInicio(), reserva.getDataFim());
         if (!disponivel) {
             return ResponseEntity.badRequest().body("Datas não estão disponíveis para reserva.");
@@ -67,6 +70,15 @@ public class ReservaController {
         reserva.setStatus("PENDENTE");
         Reserva novaReserva = reservaRepository.save(reserva);
         return ResponseEntity.ok(novaReserva);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach((error) -> {
+            errors.append(error.getField()).append(". ").append(error.getDefaultMessage()).append("\n");
+        });
+        return ResponseEntity.badRequest().body(errors.toString());
     }
 
     @GetMapping
