@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "pet")
 public class Pet {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,34 +21,37 @@ public class Pet {
     @NotBlank(message = "O nome do Pet é obrigatório.")
     private String nome;
 
-    @NotBlank(message = "O gênero do Pet é obrigatório.")
+    @NotBlank(message = "O gênero do pet é obrigatório.")
     private String genero;
 
     private String castrado;
 
-    @NotNull(message = "A idade do Pet é obrigatória.")
-    @Min(value = 0, message = "A idade do Pet não pode ser negativa.")
+    @NotNull(message = "A idade do pet é obrigatória.")
+    @Min(value = 0, message = "A idade não pode ser negativa.")
     @Max(value = 100, message = "Idade inválida para um pet.")
     private Integer idade;
 
-    @NotBlank(message = "A espécie do Pet é obrigatória.")
+    @NotBlank(message = "A espécie do pet é obrigatória.")
     private String especie;
 
     private String restricaoComorbidade;
 
-    @NotBlank(message = "O nome do Tutor é obrigatório.")
+    @NotBlank(message = "O nome do tutor é obrigatório.")
     private String nomeTutor;
 
-    @NotBlank(message = "O contato Principal do Tutor é obrigatório.")
+    @NotBlank(message = "O contato1 do tutor é obrigatório.")
     private String contato1Tutor;
-
-    @NotBlank(message = "O contato Secundário do Tutor é obrigatório.")
+    
+    @NotBlank(message = "O contato2 do tutor é obrigatório.")
     private String contato2Tutor;
 
-    @NotBlank(message = "O endereço do Tutor é obrigatório.")
+    @NotBlank(message = "O endereço do tutor é obrigatório.")
     private String endereco;
 
     private String outros;
+    
+    public Pet() {
+    }
 
     // Getters e Setters
     public Long getId(){

@@ -1,12 +1,25 @@
 package utfpr.edu.br.CadastroPet.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import utfpr.edu.br.CadastroPet.models.Pet;
 import utfpr.edu.br.CadastroPet.repository.petRepository;
-
-import java.util.List;
+import utfpr.edu.br.CadastroPet.service.PetService;
 
 @RestController
 @RequestMapping("/pets")
@@ -15,10 +28,20 @@ public class PetController {
     @Autowired
     private petRepository petRepository;
 
-    // Endpoint para criar um pet
+    @Autowired
+    private PetService petService;
+    
     @PostMapping
-    public Pet createPet(@RequestBody Pet pet) {
-        return petRepository.save(pet);
+    public ResponseEntity<Pet> salvarPet(@Valid @RequestBody Pet pet) {
+    try {
+        Pet savedPet = petRepository.save(pet);
+        return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
+    } catch (Exception e) {
+        // Log the exception
+        Logger logger = LoggerFactory.getLogger(PetController.class);
+        logger.error("Erro ao salvar pet", e);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
 
     // Endpoint para listar todos os pets
@@ -27,40 +50,22 @@ public class PetController {
         return petRepository.findAll();
     }
 
-    // Endpoint para buscar um pet por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
-        return petRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Pet> buscarPet(@PathVariable Long id) {
+        Pet pet = petService.buscarPorId(id); // Tenta buscar o pet
+        return ResponseEntity.ok(pet); // Retorna o pet encontrado
     }
 
-    // Endpoint para atualizar um pet
     @PutMapping("/{id}")
-    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody Pet petDetails) {
-        return petRepository.findById(id).map(pet -> {
-            pet.setNome(petDetails.getNome());
-            pet.setGenero(petDetails.getGenero());
-            pet.setCastrado(petDetails.getCastrado());
-            pet.setIdade(petDetails.getIdade());
-            pet.setEspecie(petDetails.getEspecie());
-            pet.setRestricaoComorbidade(petDetails.getRestricaoComorbidade());
-            pet.setNomeTutor(petDetails.getNomeTutor());
-            pet.setContato1Tutor(petDetails.getContato1Tutor());
-            pet.setContato2Tutor(petDetails.getContato2Tutor());
-            pet.setEndereco(petDetails.getEndereco());
-            pet.setOutros(petDetails.getOutros());
-            return ResponseEntity.ok(petRepository.save(pet));
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Pet> atualizarPet(@PathVariable Long id, @RequestBody Pet petAtualizado) {
+        Pet pet = petService.atualizarPet(id, petAtualizado); // Tenta atualizar o pet
+        return ResponseEntity.ok(pet); // Retorna o pet atualizado
     }
 
-    // Endpoint para deletar um pet
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long id) {
-        return petRepository.findById(id).map(pet -> {
-            petRepository.delete(pet);
-            return ResponseEntity.noContent().<Void>build(); // Especifica explicitamente o tipo Void
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Void> deletarPet(@PathVariable Long id) {
+        petService.deletarPet(id); // Tenta deletar o pet
+        return ResponseEntity.ok().build(); // Retorna uma resposta vazia
     }
 
 }

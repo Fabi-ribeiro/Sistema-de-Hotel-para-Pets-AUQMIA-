@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import utfpr.edu.br.Cadastro_cuidador.funcionario.exceptionhadler.FuncionarioNotFoundException;
 import utfpr.edu.br.Cadastro_cuidador.funcionario.model.Funcionario;
 import utfpr.edu.br.Cadastro_cuidador.funcionario.repository.FuncionarioRepository;
 
@@ -19,30 +20,36 @@ public class FuncionarioService {
         System.out.println("Funcionários encontrados: " + funcionarios);
         return funcionarios;
     }
+
     public Funcionario buscarPorId(Long id) {
         return funcionarioRepository.findById(id)
-          .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
-    }
+        .orElseThrow(FuncionarioNotFoundException::new);
+    }   
+
 
     public Funcionario salvarFuncionario(Funcionario funcionario) {
         return funcionarioRepository.save(funcionario);
     }
 
     public void deletarFuncionario(Long id) {
-        funcionarioRepository.deleteById(id);
+        if (!funcionarioRepository.existsById(id)) {
+           throw new FuncionarioNotFoundException(); // Lança a exceção se o funcionário não existir
     }
+    funcionarioRepository.deleteById(id);
+}
 
     public Funcionario atualizarFuncionario(Long id, Funcionario funcionarioAtualizado) {
-        Funcionario funcionarioExistente = funcionarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        Funcionario funcionario = funcionarioRepository.findById(id)
+        .orElseThrow(FuncionarioNotFoundException::new);  
 
         // Atualizando os campos
-        funcionarioExistente.setNome(funcionarioAtualizado.getNome());
-        funcionarioExistente.setAgenda(funcionarioAtualizado.getAgenda());
-        funcionarioExistente.setFuncao(funcionarioAtualizado.getFuncao());
-        funcionarioExistente.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
+        funcionario.setNome(funcionarioAtualizado.getNome());
+        funcionario.setAgenda(funcionarioAtualizado.getAgenda());
+        funcionario.setFuncao(funcionarioAtualizado.getFuncao());
+        funcionario.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
 
         // Salvando no banco de dados
-        return funcionarioRepository.save(funcionarioExistente);
+        return funcionarioRepository.save(funcionario);
     }
+
 }

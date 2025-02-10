@@ -5,7 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name ="funcionario")
@@ -14,21 +15,26 @@ public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "O nome do Funcionario é obrigatório")
+    
+    @NotNull(message = "O Nome é obrigatório")
+    @Size(min = 3, max = 100, message = "O Nome deve ter entre 3 e 100 caracteres")
     private String nome;
-
+    
+    @NotNull(message = "A agenda é obrigatória")
     private String agenda;
 
-    @NotBlank(message = "A função do Funcionario é obrigatória")
+    @NotNull(message = "A função é obrigatória")
+    @Size(min = 3, max = 100, message = "A descricão da função deve ter entre 3 e 100 caracteres")
     private String funcao;
-    
+
     private String horariosDeTrabalho;
-    
+
+    @NotNull(message = "A disponibilidade é obrigatória")
     private boolean disponivel; 
 
     public Funcionario(){}
-
+    
+    // getters e setters
     public Long getId() {
         return id;
     }
