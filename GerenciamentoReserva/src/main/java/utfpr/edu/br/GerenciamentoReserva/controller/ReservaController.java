@@ -8,8 +8,6 @@ import utfpr.edu.br.GerenciamentoReserva.dtos.FuncionarioDTO;
 import utfpr.edu.br.GerenciamentoReserva.dtos.PetDTO;
 import utfpr.edu.br.GerenciamentoReserva.models.Reserva;
 import utfpr.edu.br.GerenciamentoReserva.repository.ReservaRepository;
-
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import javax.validation.Valid;
 
 import java.time.LocalDateTime;
@@ -34,7 +32,7 @@ public class ReservaController {
         if (!disponivel) {
             return ResponseEntity.badRequest().body("Datas não estão disponíveis para reserva.");
         }
-
+          
         try {
             ResponseEntity<PetDTO> petResponse = restTemplate.getForEntity(
                 PET_SERVICE_URL + "/" + reserva.getPetId(), 
@@ -72,14 +70,6 @@ public class ReservaController {
         return ResponseEntity.ok(novaReserva);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        StringBuilder errors = new StringBuilder();
-        ex.getBindingResult().getFieldErrors().forEach((error) -> {
-            errors.append(error.getField()).append(". ").append(error.getDefaultMessage()).append("\n");
-        });
-        return ResponseEntity.badRequest().body(errors.toString());
-    }
 
     @GetMapping
     public ResponseEntity<List<Reserva>> listarReservas() {
@@ -124,4 +114,5 @@ public class ReservaController {
             .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(fim, inicio);
         return reservasConflitantes.isEmpty();
     }
+
 }

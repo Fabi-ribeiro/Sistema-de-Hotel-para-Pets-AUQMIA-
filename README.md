@@ -73,6 +73,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
 - **Banco de Dados**: H2
 - **Autenticação**: JSON Web Tokens (JWT)
 - **Swagger**: Swagger para documentação da api
+- **CloudAMQP**: Usado para serviço de mensageria
 
 ---
 
@@ -117,6 +118,13 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
    - **Gerenciamento de Reservas**: `http://localhost:8082/reservas`
    - **Api Gateway**: `http://localhost:8079/reservas`
 
+7. **Acesse o CloudAMQP**  
+   Após os microserviços estarem em execução, utilize as seguinte URL para acessar o serviço em nuvem:  
+   - Abra o navegador e vá para `https://www.cloudamqp.com`
+   - Clique em "Login" e Preencha os campos com as seguintes informações:
+   - E-mail: fabiolasilva@alunos.utfpr.edu.br  Senha CCHtopicos.
+   - Escolha a Instância de nome "API-topicos", nelas contém as Queue utilizadas em nosso projeto.
+
 ---
 
 ## ✅ Funcionalidades Implementadas
@@ -126,16 +134,19 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
   - Nome, gênero, idade, espécie, tutor e contatos, entre outros.
 
 ### **Cadastro de Cuidadores/Funcionários**
-- Gerenciamento de:
+- Gerenciamento de: 
   - Nome, agenda, função e horários de trabalho.
 
 ### **Gerenciamento de Reservas**
 - Criação, cancelamento, listagem e atualização de reservas.
 
+### **Troca de Mensagem**
+- Confirma se é possível criar uma reserva ou não para um Cuidador, conforme é cadastrado a sua disponibilidade 
 ---
 
 ## 🚧 Funcionalidades Não Implementadas
 
-- Autenticação com JSON Web Tokens (JWT).
+- Tratamento de adequado dos erros no serviço de GerenciamentoReserva.
+- Não foi implementado a opção de acesso a interface para verificação da Queue (mas foi disponibilizado acima o acesso a conta do CloudAMQP, caso necessário verificação)
 
 ---

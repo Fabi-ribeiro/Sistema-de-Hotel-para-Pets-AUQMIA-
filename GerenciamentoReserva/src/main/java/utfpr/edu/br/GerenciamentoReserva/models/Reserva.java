@@ -15,7 +15,7 @@ public class Reserva {
     @NotNull(message = "Data de início é obrigatória.")
     @Column(nullable = false)
     private LocalDateTime dataInicio;
-
+    
     @NotNull(message = "Data de fim é obrigatória.")
     @Column(nullable = false)
     private LocalDateTime dataFim;
@@ -23,18 +23,17 @@ public class Reserva {
     @Column(nullable = false)
     private boolean cancelada = false;
 
-    @NotNull(message = "O Código do Pet é obrigatório.")
+    @NotNull(message = "O ID do Pet é obrigatório.")
     @Column(name = "pet_id", nullable = false)
     private Long petId;
 
-    @NotNull(message = "O Código do Cuidador é obrigatório.")
+    @NotNull(message = "O ID do Cuidador é obrigatório.")
     @Column(name = "cuidador_id", nullable = false)
     private Long cuidadorId;
 
     @Column(nullable = false)
     private String status;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
