@@ -122,7 +122,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
    Após os microserviços estarem em execução, utilize as seguinte URL para acessar o serviço em nuvem:  
    - Abra o navegador e vá para `https://leopard.lmq.cloudamqp.com/queues#page=1&page_size=100`
    - Preencha os campos com as seguintes informações:
-   - Username: omprsnhq  Senha: DHYqaPDicTI8cRtw7tQk-8tQk02ZeFqj
+   - Username: hwlqwdna  Senha: DB8FWIscFe3CDJ1FWsRL1wGAKzUbYfR8W
    - Na sequência, clicar em "Sign in"
 
 ---
@@ -141,7 +141,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
 - Criação, cancelamento, listagem e atualização de reservas.
 
 ### **Troca de Mensagem**
-- Confirma se é possível criar uma reserva ou não para um Cuidador, conforme é cadastrado a sua disponibilidade. 
+- Ao cadastrar um Funcionário, será enviado uma mensagem para verificar a Disponibilidade do mesmo para agendamento. Caso esteja disponível, o mesmo será enviado para a Fila de ´funcionarioDisponivelQueue', caso o mesmo esteja indisponível, será enviado para a Fila de 'funcionarioIndisponivelQueue'.  
 ---
 
 ## 🚧 Funcionalidades Não Implementadas

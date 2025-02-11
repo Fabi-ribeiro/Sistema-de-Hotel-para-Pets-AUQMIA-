@@ -45,13 +45,14 @@ public class FuncionarioService {
         funcionario.setAgenda(funcionarioAtualizado.getAgenda());
         funcionario.setFuncao(funcionarioAtualizado.getFuncao());
         funcionario.setHorariosDeTrabalho(funcionarioAtualizado.getHorariosDeTrabalho());
+        funcionario.setDisponivel(funcionarioAtualizado.isDisponivel());
         // Salvando no banco de dados
         return funcionarioRepository.save(funcionario);
     }
 
     public String obterNomeFuncionarioPorId(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
-            .orElseThrow(() -> new FuncionarioNotFoundException("Funcionário " + id + " não encontrado!"));
+            .orElseThrow(() -> new FuncionarioNotFoundException("O Funcionário " + id + " não foi encontrado!"));
         return funcionario.getNome();
     }
 }

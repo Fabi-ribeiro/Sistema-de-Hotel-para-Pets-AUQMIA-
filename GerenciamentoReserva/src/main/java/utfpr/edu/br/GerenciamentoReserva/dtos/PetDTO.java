@@ -7,19 +7,22 @@ public class PetDTO {
     private String nomeTutor;
     private String contato1Tutor;
     private String contato2Tutor;
+    private String endereco;
     
     public PetDTO() {}
     
-    public PetDTO(Long id, String nome, String especie, String nomeTutor, 
-                  String contato1Tutor, String contato2Tutor) {
+    public PetDTO(Long id, String nome, String especie, String nomeTutor, String contato1Tutor, String contato2Tutor, String endereco) 
+    {
         this.id = id;
         this.nome = nome;
         this.especie = especie;
         this.nomeTutor = nomeTutor;
         this.contato1Tutor = contato1Tutor;
         this.contato2Tutor = contato2Tutor;
+        this.endereco = endereco;
     }
-    
+
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -66,5 +69,13 @@ public class PetDTO {
     
     public void setContato2Tutor(String contato2Tutor) {
         this.contato2Tutor = contato2Tutor;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 }

@@ -44,19 +44,26 @@ public class FuncionarioController {
         Funcionario funcionario = funcionarioService.buscarPorId(id);
         return ResponseEntity.ok(funcionario);
     }
-
+    
     @PostMapping
     public ResponseEntity<Funcionario> salvarFuncionario(@Valid @RequestBody Funcionario funcionario) {
         try {
             Funcionario savedFuncionario = (Funcionario) funcionarioService.salvarFuncionario(funcionario);
+            logger.info("Funcionario salvo: " + savedFuncionario);
+
             // Enviar mensagem para verificar a disponibilidade do cuidador
             funcionarioProducer.enviarMensagem("Verificar a disponibilidade do cuidador: " + savedFuncionario.getId());
-             
-            if(funcionario.isDisponivel()){
-                funcionarioProducer.EnviarMensagemParaSucesso("Reserva confirmada para o cuidador: " + savedFuncionario.getId());
+
+            logger.info("Disponibilidade do funcionário: " + savedFuncionario.isDisponivel());
+
+            if(savedFuncionario.isDisponivel()){
+                funcionarioProducer.enviarMensagemParaDisponivel("Reserva confirmada para o cuidador: " + savedFuncionario.getId());
+                logger.info("Mensagem enviada para a fila de Disponivel");
             } else {
-                funcionarioProducer.enviarMensagemParaNaoAprovada("Reserva não aprovada para o cuidador: " + savedFuncionario.getId());
+                funcionarioProducer.enviarMensagemParaIndisponivel("Reserva não aprovada para o cuidador: " + savedFuncionario.getId());
+                logger.info("Mensagem enviada para a fila de Indiponivel");
             }
+
             return new ResponseEntity<>(savedFuncionario, HttpStatus.CREATED);
         } catch (Exception e) {
             // Log da exceção para facilitar o diagnóstico

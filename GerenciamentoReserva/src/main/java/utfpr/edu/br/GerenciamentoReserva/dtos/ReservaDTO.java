@@ -24,5 +24,4 @@ public class ReservaDTO {
     public void setNomeTutor(String nomeTutor) {
         this.nomeTutor = nomeTutor;
     }
-
 }

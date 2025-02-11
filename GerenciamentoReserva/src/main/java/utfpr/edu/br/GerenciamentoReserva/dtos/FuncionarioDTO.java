@@ -10,7 +10,8 @@ public class FuncionarioDTO {
 
     public FuncionarioDTO() {}
 
-    public FuncionarioDTO(Long id, String nome, String agenda, String funcao, String horariosDeTrabalho, boolean disponivel) {
+    public FuncionarioDTO(Long id, String nome, String agenda, String funcao, String horariosDeTrabalho, boolean disponivel) 
+    {
         this.id = id;
         this.nome = nome;
         this.agenda = agenda;
@@ -19,6 +20,7 @@ public class FuncionarioDTO {
         this.disponivel = disponivel;
     }
 
+    // Getters e Setters
     public Long getId() {
         return id;
     }

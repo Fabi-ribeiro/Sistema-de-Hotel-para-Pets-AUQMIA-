@@ -13,12 +13,17 @@ public class ReservaConsumer {
     @Autowired
     private ReservaService reservaService; // Injetar o serviço de reserva
 
-    @RabbitListener(queues = RabbitMQConfig.RESERVA_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.FUNCIONARIO_QUEUE)
     public void receberMensagem(Message message) {
         try {
             String corpo = new String(message.getBody());
             String status = (String) message.getMessageProperties().getHeaders().get("status");
             System.out.println("Mensagem recebida: " + corpo);
+
+            if (status == null) {
+                System.out.println("Status está nulo. Mensagem não será processada.");
+                return; // Evita que o switch seja executado com status nulo
+            }
 
             // Processar a mensagem com base no status
             switch (status) {
@@ -44,7 +49,7 @@ public class ReservaConsumer {
 
     private void processarMensagemDeSucesso(String mensagem) {
         System.out.println("[SUCESSO] Mensagem recebida: " + mensagem);
-        // Atualizar status da reserva no banco
+        // Atualizar status no banco
         try {
             reservaService.atualizarStatusReserva(mensagem, "CONFIRMADA - reserva confirmada");
         } catch (Exception e) {

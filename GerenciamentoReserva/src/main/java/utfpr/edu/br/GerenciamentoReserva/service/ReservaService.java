@@ -7,13 +7,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class ReservaService {
 
     @Autowired
     private ReservaRepository reservaRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(ReservaService.class);
+
     public void atualizarStatusReserva(String reservaId, String novoStatus) {
+        if (reservaId == null || reservaId.trim().isEmpty()) {
+            logger.error("ID da reserva não pode ser nulo ou vazio.");
+            return; 
+        }
         try {
             // Tenta encontrar a reserva pelo ID
             Optional<Reserva> reservaOptional = reservaRepository.findById(Long.valueOf(reservaId));
@@ -21,17 +30,16 @@ public class ReservaService {
                 Reserva reserva = reservaOptional.get();
                 reserva.setStatus(novoStatus);
                 reservaRepository.save(reserva);
-                System.out.println("Status da reserva atualizado com sucesso: " + reservaId + " para " + novoStatus);
+                logger.info("Status da reserva atualizado com sucesso: {} para {}", reservaId, novoStatus);
             } else {
-                System.out.println("Reserva não encontrada para o ID: " + reservaId);
+                logger.warn("Reserva não encontrada para o ID: {}", reservaId);
             }
         } catch (NumberFormatException e) {
-            System.err.println("Erro ao converter o ID da reserva para Long: " + e.getMessage());
+            logger.error("Erro ao converter o ID da reserva para Long: {}", e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Erro ao atualizar o status da reserva: " + e.getMessage());
+            logger.error("Erro ao atualizar o status da reserva: {}", e.getMessage());
             e.printStackTrace();
-            // Você pode optar por lançar a exceção novamente se necessário
             throw e; // Re-lançar a exceção se necessário
         }
     }

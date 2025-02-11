@@ -11,7 +11,9 @@ public record FuncionarioDTO(
         String nome,
 
         @NotBlank(message = "Obrigatório informar a Função.")
-        String funcao
-) {
+        String funcao,
 
-}
+        @NotBlank(message="Obrigatório informar a disponibilidade")
+        @NotNull(message="Obrigatório informar a disponibilidade")
+        String disponivel
+) {}

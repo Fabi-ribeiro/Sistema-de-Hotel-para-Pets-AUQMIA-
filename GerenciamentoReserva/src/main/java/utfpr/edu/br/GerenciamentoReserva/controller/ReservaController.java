@@ -1,6 +1,7 @@
 package utfpr.edu.br.GerenciamentoReserva.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservas")
@@ -56,10 +58,10 @@ public class ReservaController {
                 if (funcionario != null && funcionario.isDisponivel()) {
                     reserva.setCuidadorId(funcionario.getId());
                 } else {
-                    return ResponseEntity.badRequest().body("Funcionário não está disponível");
+                    return ResponseEntity.badRequest().body("Funcionário não está disponível!");
                 }
             } else {
-                return ResponseEntity.badRequest().body("Funcionário não encontrado");
+                return ResponseEntity.badRequest().body("Funcionário não foi encontrado!");
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao alocar cuidador: " + e.getMessage());
@@ -70,33 +72,41 @@ public class ReservaController {
         return ResponseEntity.ok(novaReserva);
     }
 
-
     @GetMapping
     public ResponseEntity<List<Reserva>> listarReservas() {
         return ResponseEntity.ok(reservaRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reserva> buscarReserva(@PathVariable Long id) {
-        return reservaRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> buscarReserva(@PathVariable Long id) {
+        Optional<Reserva> reservaOptional = reservaRepository.findById(id);
+        
+        if (reservaOptional.isPresent()) {
+            return ResponseEntity.ok(reservaOptional.get());
+        } else {
+            String mensagemErro = "A Reserva " + id + " não foi encontrada!";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagemErro);
+        }
     }
-
+ 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarReserva(@PathVariable Long id, @RequestBody Reserva reservaAtualizada) {
-        return reservaRepository.findById(id)
-            .map(reserva -> {
-                reserva.setDataInicio(reservaAtualizada.getDataInicio());
-                reserva.setDataFim(reservaAtualizada.getDataFim());
-                reserva.setPetId(reservaAtualizada.getPetId());
-                reserva.setCuidadorId(reservaAtualizada.getCuidadorId());
-                reserva.setStatus(reservaAtualizada.getStatus());
-                reserva.setCancelada(reservaAtualizada.isCancelada());
-                
-                return ResponseEntity.ok(reservaRepository.save(reserva));
-            })
-            .orElse(ResponseEntity.notFound().build());
+        Optional<Reserva> reservaOptional = reservaRepository.findById(id);
+
+        if (reservaOptional.isPresent()) {
+            Reserva reserva = reservaOptional.get();
+            reserva.setDataInicio(reservaAtualizada.getDataInicio());
+            reserva.setDataFim(reservaAtualizada.getDataFim());
+            reserva.setPetId(reservaAtualizada.getPetId());
+            reserva.setCuidadorId(reservaAtualizada.getCuidadorId());
+            reserva.setStatus(reservaAtualizada.getStatus());
+            reserva.setCancelada(reservaAtualizada.isCancelada());
+
+            return ResponseEntity.ok(reservaRepository.save(reserva));
+        } else {
+            String mensagemErro = "A Reserva " + id + " não foi encontrada!";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensagemErro);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -114,5 +124,4 @@ public class ReservaController {
             .findByDataInicioLessThanEqualAndDataFimGreaterThanEqual(fim, inicio);
         return reservasConflitantes.isEmpty();
     }
-
 }

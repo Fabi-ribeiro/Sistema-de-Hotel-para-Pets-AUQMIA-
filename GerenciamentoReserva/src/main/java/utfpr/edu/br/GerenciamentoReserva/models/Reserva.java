@@ -34,6 +34,7 @@ public class Reserva {
     @Column(nullable = false)
     private String status;
 
+    // Getters e Setters
     public Long getId() {
         return id;
     }
