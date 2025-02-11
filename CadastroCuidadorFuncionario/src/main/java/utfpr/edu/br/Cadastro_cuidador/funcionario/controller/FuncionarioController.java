@@ -35,7 +35,7 @@ public class FuncionarioController {
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> listarTodos() {
-        List<Funcionario> funcionarios =  funcionarioService.listarTodos();
+        List<Funcionario> funcionarios = funcionarioService.listarTodos();
         return ResponseEntity.ok(funcionarios);
     }
 
@@ -49,7 +49,6 @@ public class FuncionarioController {
     public ResponseEntity<Funcionario> salvarFuncionario(@Valid @RequestBody Funcionario funcionario) {
         try {
             Funcionario savedFuncionario = (Funcionario) funcionarioService.salvarFuncionario(funcionario);
-
             // Enviar mensagem para verificar a disponibilidade do cuidador
             funcionarioProducer.enviarMensagem("Verificar a disponibilidade do cuidador: " + savedFuncionario.getId());
              
@@ -58,12 +57,10 @@ public class FuncionarioController {
             } else {
                 funcionarioProducer.enviarMensagemParaNaoAprovada("Reserva não aprovada para o cuidador: " + savedFuncionario.getId());
             }
-
             return new ResponseEntity<>(savedFuncionario, HttpStatus.CREATED);
-
         } catch (Exception e) {
             // Log da exceção para facilitar o diagnóstico
-            logger.error("Error salvar Funcionario", e);
+            logger.error("Error ao salvar Funcionario", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,11 +71,13 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionario); // Retorna o funcionário atualizado
     }
 
-   @DeleteMapping("/{id}")
-   public ResponseEntity<Void> deletarFuncionario(@PathVariable Long id) {
-       funcionarioService.deletarFuncionario(id);
-         return ResponseEntity.ok().build();
-   }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarFuncionario(@PathVariable Long id) {
+        // Obter o nome do funcionário antes de deletar
+        String nomeFuncionario = funcionarioService.obterNomeFuncionarioPorId(id);
+        funcionarioService.deletarFuncionario(id);// Realizar a exclusão do funcionário
+        String mensagem = "O Funcionário(a) " + nomeFuncionario + " foi excluído(a) com sucesso!";
+        return ResponseEntity.ok(mensagem);// Retornar a mensagem de sucesso
+    } 
 }
 

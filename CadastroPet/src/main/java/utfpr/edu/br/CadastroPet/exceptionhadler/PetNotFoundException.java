@@ -4,4 +4,8 @@ public class PetNotFoundException extends RuntimeException {
     public PetNotFoundException() {
         super("Pet não encontrado!"); // Mensagem padrão
     }
+
+    public PetNotFoundException(String message) {
+        super(message);
+    }
 }

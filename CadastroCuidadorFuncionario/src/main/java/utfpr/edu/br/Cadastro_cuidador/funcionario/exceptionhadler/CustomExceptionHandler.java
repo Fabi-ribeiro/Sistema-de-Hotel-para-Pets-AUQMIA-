@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,19 +23,8 @@ public class CustomExceptionHandler {
         return errors;
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(FuncionarioNotFoundException.class) // Captura a exceção personalizada
-    public Map<String, String> handleFuncionarioNotFoundException(FuncionarioNotFoundException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("message", ex.getMessage()); // Retorna a mensagem da exceção
-        return errors;
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RuntimeException.class)
-    public Map<String, String> handleRuntimeException(RuntimeException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("message", "Um erro ocorreu: " + ex.getMessage()); // Mensagem genérica para outras exceções
-        return errors;
+    @ExceptionHandler(FuncionarioNotFoundException.class)
+    public ResponseEntity<String> FuncionarioNotFoundException(FuncionarioNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("O Funcionário não foi encontrado!");
     }
 }

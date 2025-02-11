@@ -5,4 +5,7 @@ public class FuncionarioNotFoundException extends RuntimeException {
         super("Funcionario não encontrado!");
     }
 
+    public FuncionarioNotFoundException(String message) {
+        super(message);
+    }  
 }

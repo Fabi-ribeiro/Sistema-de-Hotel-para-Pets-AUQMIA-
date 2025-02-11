@@ -37,15 +37,14 @@ public class PetController {
         Pet savedPet = petRepository.save(pet);
         return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
     } catch (Exception e) {
-        // Log the exception
+        // Log de exception
         Logger logger = LoggerFactory.getLogger(PetController.class);
         logger.error("Erro ao salvar pet", e);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 
-    // Endpoint para listar todos os pets
-    @GetMapping
+    @GetMapping// Endpoint para listar todos os pets
     public List<Pet> getAllPets() {
         return petRepository.findAll();
     }
@@ -63,9 +62,10 @@ public class PetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarPet(@PathVariable Long id) {
+    public ResponseEntity<String> deletarPet(@PathVariable Long id) {
+        String nomePet = petService.obterNomePetPorId(id); // Obter o nome do pet antes de deletar
         petService.deletarPet(id); // Tenta deletar o pet
-        return ResponseEntity.ok().build(); // Retorna uma resposta vazia
+        String mensagem = "O Pet " + nomePet + " foi excluído com sucesso.";
+        return ResponseEntity.ok(mensagem); // Retorna a mensagem de sucesso
     }
-
 }

@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -23,12 +23,10 @@ public class CustomExceptionHandler {
         return errors;
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PetNotFoundException.class)
-    public Map<String, String> handlePetNotFoundException(PetNotFoundException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("message", ex.getMessage()); // Retorna a mensagem da exceção
-        return errors;
+    public ResponseEntity<String> handlePetNotFoundException(PetNotFoundException ex) {
+        // Retorna uma mensagem simples com status 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

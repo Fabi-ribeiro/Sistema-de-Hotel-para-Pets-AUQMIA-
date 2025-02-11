@@ -21,7 +21,6 @@ public class PetService {
     public Pet atualizarPet(Long id, Pet petAtualizado) {
         Pet pet = petRepository.findById(id)
             .orElseThrow(PetNotFoundException::new); // Lança a exceção se não encontrado
-
         // Atualiza os campos do pet
         pet.setNome(petAtualizado.getNome());
         pet.setGenero(petAtualizado.getGenero());
@@ -33,7 +32,6 @@ public class PetService {
         pet.setContato2Tutor(petAtualizado.getContato2Tutor());
         pet.setEndereco(petAtualizado.getEndereco());
         pet.setOutros(petAtualizado.getOutros());
-        // Adicione outros campos que precisam ser atualizados
 
         return petRepository.save(pet); // Salva e retorna o pet atualizado
     }
@@ -45,5 +43,9 @@ public class PetService {
         petRepository.deleteById(id); // Deleta o pet se encontrado
     }
 
-    // Outros métodos do serviço...
+    public String obterNomePetPorId(Long id) {
+        Pet pet = petRepository.findById(id)
+            .orElseThrow(PetNotFoundException::new); // Lança a exceção se o pet não for encontrado
+        return pet.getNome();
+    }
 }

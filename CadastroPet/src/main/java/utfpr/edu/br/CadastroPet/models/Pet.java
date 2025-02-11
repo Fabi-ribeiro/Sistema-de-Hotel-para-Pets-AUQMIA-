@@ -126,5 +126,4 @@ public class Pet {
     public void setOutros(String outros) {
         this.outros = outros;
     }
-
 }
