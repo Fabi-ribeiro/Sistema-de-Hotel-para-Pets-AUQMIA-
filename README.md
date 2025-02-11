@@ -122,7 +122,7 @@ O **AUQMIA** é um sistema de gerenciamento de hospedagem para pets, desenvolvid
    Após os microserviços estarem em execução, utilize as seguinte URL para acessar o serviço em nuvem:  
    - Abra o navegador e vá para `https://leopard.lmq.cloudamqp.com/queues#page=1&page_size=100`
    - Preencha os campos com as seguintes informações:
-   - Username: hwlqwdna  Senha: DB8FWIscFe3CDJ1FWsRL1wGAKzUbYfR8W
+   - Username: hwlqwdna  Senha: B8FWIscFe3CDJ1FWsRL1wGAKzUbYfR8W
    - Na sequência, clicar em "Sign in"
 
 ---
